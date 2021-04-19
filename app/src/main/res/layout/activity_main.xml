@@ -12,9 +12,14 @@
         android:id="@+id/imgLoader"
         android:layout_width="96dp"
         android:layout_height="96dp"
-        android:background="@drawable/ic_loading" />
+        android:background="@drawable/ic_loading"
+        android:visibility="gone" />
 
     <include
         android:id="@+id/includeLayoutTemp"
         layout="@layout/layout_temp" />
+
+    <include
+        android:id="@+id/includeLayoutError"
+        layout="@layout/layout_error" />
 </LinearLayout>

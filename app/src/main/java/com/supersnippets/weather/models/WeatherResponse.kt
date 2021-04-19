@@ -2,6 +2,7 @@ package com.supersnippets.weather.models
 
 
 data class WeatherResponse(
+    val success: Boolean?,
     val location: Location,
     val current: Current
 )
