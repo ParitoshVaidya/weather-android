@@ -50,23 +50,4 @@ class NetworkInterceptor(
         }
         return false
     }
-
-    // existing code being used in project
-    private fun isInternetAvailableBak(): Boolean {
-        var wifiDataAvailable = false
-        var mobileDataAvailable = false
-        val conManager =
-            applicationContext.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-        val networkInfo = conManager.allNetworkInfo
-        for (netInfo in networkInfo) {
-            if (netInfo.typeName
-                    .equals("WIFI", ignoreCase = true)
-            ) if (netInfo.isConnected) wifiDataAvailable = true
-            if (netInfo.typeName
-                    .equals("MOBILE", ignoreCase = true)
-            ) if (netInfo.isConnected) mobileDataAvailable = true
-        }
-        return wifiDataAvailable || mobileDataAvailable
-    }
-
 }

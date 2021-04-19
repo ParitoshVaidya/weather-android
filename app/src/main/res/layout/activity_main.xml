@@ -10,75 +10,11 @@
 
     <ImageView
         android:id="@+id/imgLoader"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="@drawable/ic_loading"
-        android:visibility="visible" />
+        android:layout_width="96dp"
+        android:layout_height="96dp"
+        android:background="@drawable/ic_loading" />
 
-    <LinearLayout
-        android:id="@+id/layoutTemp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:visibility="gone">
-
-        <TextView
-            android:id="@+id/txtTemp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="56dp"
-            android:gravity="center_horizontal"
-            android:lineHeight="112sp"
-            android:text="20°"
-            android:textColor="#2a2a2a"
-            android:textSize="96sp" />
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="62dp"
-            android:gravity="center_horizontal"
-            android:lineHeight="56sp"
-            android:text="Bangalore"
-            android:textSize="36sp" />
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/layoutForecast"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:background="@android:color/white"
-        android:orientation="vertical"
-        android:visibility="gone">
-
-        <include layout="@layout/layout_day" />
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@android:color/darker_gray" />
-
-        <include layout="@layout/layout_day" />
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@android:color/darker_gray" />
-
-        <include layout="@layout/layout_day" />
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@android:color/darker_gray" />
-
-        <include layout="@layout/layout_day" />
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@android:color/darker_gray" />
-    </LinearLayout>
+    <include
+        android:id="@+id/includeLayoutTemp"
+        layout="@layout/layout_temp" />
 </LinearLayout>

@@ -1,43 +1,31 @@
 package com.supersnippets.weather.repositories
 
-import androidx.lifecycle.MutableLiveData
-import com.supersnippets.weather.helpers.NoInternetException
+import android.location.Location
+import com.supersnippets.weather.models.WeatherDto
 import com.supersnippets.weather.service.ApiService
 
 class WeatherRepository(private val apiService: ApiService) : BaseRepository() {
-    var weatherLiveData = MutableLiveData<String>()
-    private val TAG = "WeatherRepository"
-
-    companion object {
-        @Volatile
-        private var instance: WeatherRepository? = null
-
-        fun getInstance(apiService: ApiService): WeatherRepository =
-            instance ?: synchronized(this) {
-                instance ?: WeatherRepository(apiService).also { instance = it }
-            }
-    }
-
-    fun getWeather(): MutableLiveData<String> {
-        apiService.getWeather().makeCall {
+    fun getWeather(
+        location: Location,
+        onSuccess: (WeatherDto) -> Unit,
+        onFailure: (Throwable?) -> Unit
+    ) {
+        val strLocation =
+            "%.4f".format(location.latitude).toString() + "," + "%.4f".format(location.longitude)
+        apiService.getWeather(strLocation).makeCall {
             onResponseSuccess = {
                 println("-- on success")
-
+                val weatherDto = WeatherDto(
+                    it.body()?.current?.temperature,
+                    it.body()?.location?.name
+                )
+                onSuccess(weatherDto)
             }
             onResponseFailure = {
-                //callBack.onError(it)
                 println("-- on failure")
-                if (it is NoInternetException) {
-                    print("-- no internet")
-
-
-                } else {
-                    println("-- on failure else part")
-                }
                 it?.printStackTrace()
+                onFailure(it)
             }
-
         }
-        return MutableLiveData()
     }
 }

@@ -1,7 +1,7 @@
 package com.supersnippets.weather.di
 
-import android.content.Context
 import com.supersnippets.weather.BASE_URL
+import com.supersnippets.weather.helpers.AccessKeyInterceptor
 import com.supersnippets.weather.helpers.NetworkInterceptor
 import com.supersnippets.weather.service.ApiService
 import okhttp3.OkHttpClient
@@ -13,8 +13,9 @@ import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
 
 val networkModule = module {
-    single { provideNetInterceptor(androidContext()) }
-    single { provideOkHttpClient(get()) }
+    single { NetworkInterceptor(androidContext()) }
+    single { AccessKeyInterceptor() }
+    single { provideOkHttpClient(get(), get()) }
     single { provideApi(get()) }
     single { provideRetrofit(get()) }
 }
@@ -28,11 +29,10 @@ fun provideRetrofit(okHttpClient: OkHttpClient): Retrofit {
         .build()
 }
 
-fun provideNetInterceptor(context: Context): NetworkInterceptor {
-    return NetworkInterceptor(context)
-}
-
-fun provideOkHttpClient(networkInterceptor: NetworkInterceptor): OkHttpClient {
+fun provideOkHttpClient(
+    networkInterceptor: NetworkInterceptor,
+    accessKeyInterceptor: AccessKeyInterceptor
+): OkHttpClient {
     val logging: HttpLoggingInterceptor? = HttpLoggingInterceptor()
     logging!!.level = HttpLoggingInterceptor.Level.BODY
 
@@ -43,6 +43,7 @@ fun provideOkHttpClient(networkInterceptor: NetworkInterceptor): OkHttpClient {
         .writeTimeout(1, TimeUnit.MINUTES)
         .connectTimeout(1, TimeUnit.MINUTES)
         .addInterceptor(networkInterceptor)
+        .addInterceptor(accessKeyInterceptor)
         .addInterceptor(logging)
         .build()
 }

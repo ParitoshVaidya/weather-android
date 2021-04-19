@@ -1,31 +1,37 @@
 package com.supersnippets.weather.viewmodels
 
-import androidx.lifecycle.LiveData
+import android.location.Location
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.supersnippets.weather.models.WeatherDto
+import com.supersnippets.weather.repositories.LocationRepository
 import com.supersnippets.weather.repositories.WeatherRepository
-import com.supersnippets.weather.service.ApiService
-import org.koin.java.KoinJavaComponent
 
-class WeatherViewModel : ViewModel() {
-    private val apiService: ApiService by KoinJavaComponent.inject(ApiService::class.java)
-    private val repo = WeatherRepository.getInstance(apiService)
-    private val isLoading = MutableLiveData<Boolean>()
+class WeatherViewModel(
+    private val weatherRepo: WeatherRepository,
+    private val locationRepo: LocationRepository
+) : ViewModel() {
+    val isLoading = MutableLiveData<Boolean>()
+    val isError = MutableLiveData<Boolean>()
+    val weatherLiveData = MutableLiveData<WeatherDto>()
 
-    var weatherLiveData = MutableLiveData<String>()
-
-    fun getWeather(): MutableLiveData<String> {
-        return weatherLiveData
-    }
-
-    fun fetchWeather(): MutableLiveData<String> {
+    fun fetchWeather() {
         isLoading.value = true
-        weatherLiveData = repo.getWeather()
-        isLoading.value = false
-        return weatherLiveData
+        isError.value = false
+        locationRepo.getLocation(::getLocationSuccess, ::onFailure)
     }
 
-    fun getIsLoading(): LiveData<Boolean> {
-        return isLoading
+    private fun getLocationSuccess(location: Location) {
+        weatherRepo.getWeather(location, ::getWeatherSuccess, ::onFailure)
+    }
+
+    private fun getWeatherSuccess(dto: WeatherDto) {
+        weatherLiveData.value = dto
+        isLoading.value = false
+    }
+
+    private fun onFailure(throwable: Throwable?) {
+        isLoading.value = false
+        isError.value = true
     }
 }
