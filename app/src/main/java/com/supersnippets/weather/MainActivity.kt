@@ -7,12 +7,14 @@ import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.karumi.dexter.Dexter
 import com.karumi.dexter.PermissionToken
 import com.karumi.dexter.listener.PermissionDeniedResponse
 import com.karumi.dexter.listener.PermissionGrantedResponse
 import com.karumi.dexter.listener.PermissionRequest
 import com.karumi.dexter.listener.single.PermissionListener
+import com.supersnippets.weather.adapters.ForecastAdapter
 import com.supersnippets.weather.databinding.ActivityMainBinding
 import com.supersnippets.weather.databinding.LayoutErrorBinding
 import com.supersnippets.weather.databinding.LayoutTempBinding
@@ -66,21 +68,23 @@ class MainActivity : AppCompatActivity(), PermissionListener {
         weatherViewModel.fetchWeather()
 
         weatherViewModel.isLoading.observe(this, Observer {
-            println("loading changed $it")
             if (it) showProgressBar() else hideProgressBar()
         })
 
         weatherViewModel.isError.observe(this, Observer {
-            println("loading changed $it")
             if (it) {
                 showErrorLayout()
             }
         })
 
         weatherViewModel.weatherLiveData.observe(this, Observer {
-            println("weather changed $it")
             layoutTempBinding.txtTemp.text = it.temperature.toString() + "°"
             layoutTempBinding.txtCity.text = it.city
+
+            layoutTempBinding.recyclerView.apply {
+                layoutManager = LinearLayoutManager(context)
+                adapter = ForecastAdapter(it.forecastList)
+            }
         })
     }
 

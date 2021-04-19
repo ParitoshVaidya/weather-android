@@ -21,7 +21,8 @@ class WeatherRepository(private val apiService: ApiService) : BaseRepository() {
                 } else {
                     val weatherDto = WeatherDto(
                         it.body()?.current?.temperature,
-                        it.body()?.location?.name
+                        it.body()?.location?.name,
+                        ArrayList()
                     )
                     onSuccess(weatherDto)
                 }
