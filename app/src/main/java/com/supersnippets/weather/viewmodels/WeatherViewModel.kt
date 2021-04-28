@@ -3,7 +3,6 @@ package com.supersnippets.weather.viewmodels
 import android.location.Location
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.supersnippets.weather.models.ForecastDto
 import com.supersnippets.weather.models.WeatherDto
 import com.supersnippets.weather.repositories.LocationRepository
 import com.supersnippets.weather.repositories.WeatherRepository
@@ -27,14 +26,6 @@ class WeatherViewModel(
     }
 
     private fun getWeatherSuccess(dto: WeatherDto) {
-        val forecastList = mutableListOf(
-            ForecastDto("Monday", "20"),
-            ForecastDto("Tuesday", "38"),
-            ForecastDto("Wednesday", "28"),
-            ForecastDto("Thursday", "32")
-        )
-
-        dto.forecastList = forecastList
         weatherLiveData.value = dto
         isLoading.value = false
     }
